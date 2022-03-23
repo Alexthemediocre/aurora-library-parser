@@ -1,0 +1,10 @@
+{
+   "json.schemas": [
+      {
+         "fileMatch": [
+            "files/documents/*/converted*.json"
+         ],
+         "url": "./librarySchema.json"
+      }
+   ]
+}

@@ -1,0 +1,107 @@
+{
+   "$schema": "http://json-schema.org/schema",
+   "$id": "ConvertedLibrarySchema",
+   "type": "array",
+   "description": "A converted library document.",
+   "definitions": {
+      "Question": {
+         "type": "object",
+         "properties": {
+            "asker": {
+               "type": "string",
+               "description": "The name of the user asking the question."
+            },
+            "query": {
+               "type": "string",
+               "description": "What the user is asking."
+            },
+            "attachments": {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "description": "Any images or additional things the user includes."
+            },
+            "context": {
+               "type": "string",
+               "description": "Necessary context to the question. Added afterwards as necessary."
+            }
+         },
+         "required": [
+            "asker",
+            "query",
+            "attachments"
+         ],
+         "description": "A single question. Includes the author, the main question, any attachments, and context, if provided."
+      },
+      "Reply": {
+         "type": "object",
+         "properties": {
+            "content": {
+               "type": "string",
+               "description": "The content of the reply."
+            },
+            "index": {
+               "type": "number",
+               "description": "The position this reply has in the question's answers, sub-asks, and replies."
+            }
+         },
+         "description": "Used to represent an answer or something similar with more indentation than usual answers. Often used for lists."
+      },
+      "Ask": {
+         "type": "object",
+         "properties": {
+            "question": {
+               "$ref": "#/definitions/Question",
+               "description": "Information describing the question."
+            },
+            "answers": {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "description": "The answers to this question. Usually, one bullet point maps to one string in the array."
+            },
+            "subAsks": {
+               "type": "array",
+               "items": {
+                  "$ref": "#/definitions/Ask"
+               },
+               "description": "Questions that were asked chaining off of the current one."
+            },
+            "selfReplies": {
+               "type": "array",
+               "items": {
+                  "$ref": "#/definitions/Reply"
+               },
+               "description": "Any replies or parts of the answer with greater indentation than usual answers."
+            },
+            "index": {
+               "type": "number",
+               "description": "The position this ask has in the question's answers, sub-asks, and replies, if it is a sub-ask. If it is top level, then the index in the array of the current category's questions."
+            }
+         },
+         "description": "Represents a single ask. Includes a question, its answers, and any relevant sub-asks associated with it."
+      },
+      "Category": {
+         "type": "object",
+         "properties": {
+            "header": {
+               "type": "string",
+               "description": "The name of the current category."
+            },
+            "questions": {
+               "type": "array",
+               "items": {
+                  "$ref": "#/definitions/Ask"
+               },
+               "description": "The list of asks associated with this category."
+            }
+         },
+         "description": "Represents a category and its associated questions."
+      }
+   },
+   "items": {
+      "$ref": "#/definitions/Category"
+   }
+}

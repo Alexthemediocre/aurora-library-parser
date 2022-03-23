@@ -1,0 +1,20 @@
+{
+  "name": "aurora-library-parser",
+  "version": "1.0.0",
+  "description": "Scripts to convert the Aurora World Library into JSON files",
+  "main": "src/index.js",
+  "author": "Alexthemediocre",
+  "dependencies": {
+    "@types/parse5": "^6.0.3",
+    "parse5": "^6.0.1"
+  },
+  "engines": {
+    "node": ">=16.14.2"
+  },
+  "scripts": {
+    "buildZips": "node src/syncFromZips.js",
+    "start": "node src/index.js",
+    "test:images": "node tests/hasEveryImage.js"
+  },
+  "private": "true"
+}
