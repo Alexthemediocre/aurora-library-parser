@@ -1,5 +1,3 @@
-//@ts-check
-
 const parse5 = require('parse5');
 const HTMLNode = require('./HTMLNode');
 const fs = require('fs');

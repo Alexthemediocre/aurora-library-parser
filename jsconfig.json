@@ -99,9 +99,7 @@
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
   "include": [
-    "src/index.js",
-    "src/breakIntoCategories.js",
-    "tests/hasEveryImage.js",
-    "tests/syncFromZips.js"
+    "src/*",
+    "tests/*"
   ]
 }
