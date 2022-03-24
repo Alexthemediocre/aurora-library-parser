@@ -395,7 +395,7 @@ function getLastAsk(category, throwOnNoQuestions = true) {
 function loadHTMLDoc(folderName) {
    const htmlFileName = folderName.replaceAll(' ', '') + '.html';
 
-   let parsed = parse5.parse(fs.readFileSync(`documents/${folderName}/${htmlFileName}`, 'utf-8'));
+   let parsed = parse5.parse(fs.readFileSync(`files/documents/${folderName}/${htmlFileName}`, 'utf-8'));
    const htmlElem = parsed.childNodes.find(v => v.nodeName === 'html');
    if (!htmlElem || !('tagName' in htmlElem)) throw new Error('Could not find base HTML element. ' + htmlFileName);
 

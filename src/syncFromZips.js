@@ -23,7 +23,7 @@ nameArr.forEach(v => {
       return;
    }
 
-   if (!fs.existsSync(docPath)) fs.mkdirSync(docPath);
+   if (!fs.existsSync(docPath)) fs.mkdirSync(docPath, {recursive: true});
 
    let imagesPath = `${docPath}/images`;
    if (fs.existsSync(imagesPath)) {
