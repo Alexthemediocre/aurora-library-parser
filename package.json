@@ -4,9 +4,15 @@
   "description": "Scripts to convert the Aurora World Library into JSON files",
   "main": "src/index.js",
   "author": "Alexthemediocre",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alexthemediocre/aurora-library-parser.git"
+  },
   "dependencies": {
-    "@types/parse5": "^6.0.3",
     "parse5": "^6.0.1"
+  },
+  "devDependencies": {
+    "@types/parse5": "^6.0.3"
   },
   "engines": {
     "node": ">=16.14.2"
