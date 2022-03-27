@@ -62,7 +62,7 @@ if (opts.help) {
    console.log('[-a|--all]\n   Sets all options (other than --help) to true.');
    console.log('[-z|--zips]\n   Clears zip files.');
    console.log('[-d|--docs]\n   Clears document (HTML) files. Ignores JSON files and images.');
-   console.log('[-i|--imgs|--images]\n   Clears images. Leaves HTML and JSON files alone..');
+   console.log('[-i|--imgs|--images]\n   Clears images. Leaves HTML and JSON files alone.');
    console.log('[-j|--json]\n   Clears generated JSON files. Leaves other document files alone.');
 
    console.groupEnd();
