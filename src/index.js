@@ -6,5 +6,3 @@ nameArr.forEach(v => {
    let data = JSON.stringify(extractData(v), undefined, 3);
    fs.writeFileSync(`files/documents/${v}/converted.json`, data);
 });
-
-console.log('done');

@@ -55,8 +55,6 @@ function getDepth(elem) {
  */
 function isQuestion(elem) {
    let children = elem.children;
-   //let childElementCount = elem.childElementCount;
-   //if (childElementCount !== 1 && childElementCount !== 2) return false;
    if (children.length > 2) return false;
 
    let child = children[0];
@@ -65,9 +63,6 @@ function isQuestion(elem) {
    let [author, ...others] = child.children;
    if (!author || author.tagName !== 'SPAN') return false;
    if (author.attributes.get('class') !== config.boldClassId) return false;
-
-   /*let joined = others.map(v => stripHTML(v.textContent)).join('');
-   if (!joined.startsWith(': ') && !joined.startsWith(':\n')) return false;*/
 
    let joined = others.reduce((str, v) => {
      if (str.length >= 2) return str;
@@ -108,7 +103,6 @@ function convertToQuestionObject(elem) {
    });
 
    let addColonBackIn = false;
-   //if (contentArr[0].match(/^:(?:.|\n)?$/)) {
    if (/^:(?:.|\n)?$/.test(contentArr[0])) {
       addColonBackIn = true;
       contentArr.splice(0, 3 - contentArr[0].length);
@@ -264,7 +258,6 @@ function stripHTML(str) {
    });
 
    str = str.replaceAll('<br>', '\n').replaceAll(/<.+?>/g, '');
-   //str = str.replaceAll('&nbsp;', ' ').replaceAll('&amp;', '&').replaceAll('&lt;', '<').replaceAll('&gt;', '>');
    str = str.replaceAll(/&(?:nbsp|amp|lt|gt);/g, (s) => {
       switch (s) {
          case '&nbsp;': return ' ';
