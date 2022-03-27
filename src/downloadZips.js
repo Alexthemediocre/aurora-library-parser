@@ -19,41 +19,64 @@ const docMap = new Map([
  * @param {string} writePath The folder that the file should be saved in.
  * @param {string} name The name that the file should be saved as.
  * @param {string} id The id of the document.
+ * @returns {Promise<void>} A promise that resolves once the document has finished being saved to disk.
  */
-function downloadDocument(writePath, name, id) {
+async function downloadDocument(writePath, name, id) {
    if (!writePath.endsWith('/') && !writePath.endsWith('\\')) writePath += '/';
 
-   https.get(`https://docs.google.com/feeds/download/documents/export/Export?id=${id}&exportFormat=zip`, (res) => {
-      let stream = fs.createWriteStream(`${writePath}${name}`);
+   return new Promise((resolve, reject) => {
+      https.get(`https://docs.google.com/feeds/download/documents/export/Export?id=${id}&exportFormat=zip`, (res) => {
+         let stream = fs.createWriteStream(`${writePath}${name}.zip`);
 
-      if (res.statusCode && res.statusCode.toString().startsWith('3')) {
-         if (res.headers.location) https.get(res.headers.location, (res) => res.pipe(stream));
-         else {
-            console.log(`Trying to get document ${name} (${id}): redirected without a location`);
-            stream.destroy();
+         if (res.statusCode && res.statusCode.toString().startsWith('3')) {
+            if (res.headers.location) https.get(res.headers.location, (res) => {
+               res.pipe(stream);
+               res.on('end', () => resolve());
+            });
+            else {
+               stream.destroy();
+               reject(`Trying to get document ${name} (${id}): redirected without a location`);
+            }
          }
-      }
-      else res.pipe(stream);
-   });
+         else {
+            res.pipe(stream);
+            res.on('end', () => resolve());
+         }
+      });
+   })
 }
 
 /**
+ * Returns an iterator of the document name, document ID, and the error encountered, or `undefined`
+ * if it was successful.
  * 
  * @param {string} writePath The folder that the files should be saved in.
- * @param {number} delay The amount of time to wait before making a new request, in milliseconds.
+ * @param {Iterable<[string, string]>} namesToIds An iterable of arrays. The first element of each array is
+ * the document name and the second is the ID. An example of this structure is what is returned by `map.entries()`.
+ * @param {number} waitTime The amount of time, in milliseconds, to wait between finishing one download and starting another.
+ * @returns {AsyncGenerator<[string, string, Error | undefined]>} 
  */
-function saveAllDocuments(writePath, delay = 1000) {
-   let iter = docMap.entries();
-   let interval = setInterval(() => {
-      let res = iter.next();
-      if (res.done) {
-         clearInterval(interval);
-         return;
+async function* loopDownloads(writePath, namesToIds, waitTime = 1000) {
+   for (let arr of namesToIds) {
+      /** @type {Error | undefined} */
+      let err;
+      try {
+         await downloadDocument(writePath, arr[0], arr[1]);
+      } catch (error) {
+         if (error instanceof Error) err = error;
+         else error = new Error('Unknown error: ' + JSON.stringify(error));
       }
-
-      downloadDocument(writePath, res.value[0] + '.zip', res.value[1]);
-   }, delay);
+      yield /** @type {Promise<[string, string, Error | undefined]>} */ (new Promise((res) => {
+         setTimeout(() => res([...arr, err]), waitTime);
+      }));
+   }
 }
 
 if (!fs.existsSync('files/ZipFiles')) fs.mkdirSync('files/ZipFiles', {recursive: true});
-saveAllDocuments('files/ZipFiles');
+(async () => {
+   for await (let [name, , error] of loopDownloads('files/ZipFiles', docMap.entries())) {
+      console.log(`Finished downloading document ${name}. Result:`);
+      if (error) console.error(error);
+      else console.log('Success');
+   }
+})();
