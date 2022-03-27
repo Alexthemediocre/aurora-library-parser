@@ -71,9 +71,9 @@ if (opts.help) {
 
 if (opts.setAllTrue) opts.clearZips = opts.clearImages = opts.clearDocs = opts.clearJson = true;
 
-if (opts.clearZips) fs.rmSync(zipDir, {recursive: true});
+if (opts.clearZips && fs.existsSync(zipDir)) fs.rmSync(zipDir, {recursive: true});
 
-if (opts.clearDocs || opts.clearJson || opts.clearImages) {
+if ((opts.clearDocs || opts.clearJson || opts.clearImages) && fs.existsSync(docDir)) {
    for (let folder of fs.readdirSync(docDir)) {
       let dirPath = `${docDir}/${folder}`;
       if (opts.clearDocs && opts.clearJson && opts.clearImages) { // to make it easy, remove the entire folder

@@ -18,11 +18,12 @@
     "node": ">=16.14.2"
   },
   "scripts": {
-    "download_zips": "node src/downloadZips.js",
-    "build_zips": "node src/syncFromZips.js",
+    "download_zips": "node src/build/downloadZips.js",
+    "build_zips": "node src/build/syncFromZips.js",
     "build_all": "npm run download_zips && npm run build_zips",
     "test:images": "node tests/hasEveryImage.js",
-    "start": "node src/index.js"
+    "clean_files": "node tests/cleanFiles.js",
+    "start": "node ."
   },
   "private": "true"
 }
